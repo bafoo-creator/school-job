@@ -2,7 +2,7 @@
 import React from 'react';
 
 interface Props {
-  onNavigate: (page: 'home' | 'contact' | 'post-job' | 'login') => void;
+  onNavigate: (page: 'home' | 'contact' | 'post-job' | 'login' | 'profile') => void;
 }
 
 const Footer: React.FC<Props> = ({ onNavigate }) => {
@@ -24,9 +24,9 @@ const Footer: React.FC<Props> = ({ onNavigate }) => {
               La première plateforme dédiée exclusivement au recrutement dans le secteur de l'enseignement privé au Maroc.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-white transition-colors"><i className="fab fa-facebook-f"></i></a>
-              <a href="#" className="hover:text-white transition-colors"><i className="fab fa-linkedin-in"></i></a>
-              <a href="#" className="hover:text-white transition-colors"><i className="fab fa-instagram"></i></a>
+              <a href="#" className="hover:text-white transition-colors text-xl"><i className="fab fa-facebook-f"></i></a>
+              <a href="#" className="hover:text-white transition-colors text-xl"><i className="fab fa-linkedin-in"></i></a>
+              <a href="#" className="hover:text-white transition-colors text-xl"><i className="fab fa-instagram"></i></a>
             </div>
           </div>
 
@@ -35,7 +35,7 @@ const Footer: React.FC<Props> = ({ onNavigate }) => {
             <ul className="space-y-4 text-sm text-left">
               <li><button onClick={() => onNavigate('home')} className="hover:text-blue-400 transition-colors text-left">Accueil</button></li>
               <li><button onClick={() => onNavigate('home')} className="hover:text-blue-400 transition-colors text-left">Offres d'emploi</button></li>
-              <li><button onClick={() => onNavigate('login')} className="hover:text-blue-400 transition-colors text-left">Déposer mon CV</button></li>
+              <li><button onClick={() => onNavigate('profile')} className="hover:text-blue-400 transition-colors text-left font-bold text-blue-400">Créer mon profil / CV</button></li>
               <li><button onClick={() => onNavigate('post-job')} className="hover:text-blue-400 transition-colors text-left">Espace Recruteur</button></li>
             </ul>
           </div>

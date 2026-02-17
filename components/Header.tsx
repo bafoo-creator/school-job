@@ -2,8 +2,8 @@
 import React from 'react';
 
 interface Props {
-  onNavigate: (page: 'home' | 'contact' | 'post-job' | 'login') => void;
-  activePage: 'home' | 'contact' | 'post-job' | 'login';
+  onNavigate: (page: 'home' | 'contact' | 'post-job' | 'login' | 'profile') => void;
+  activePage: 'home' | 'contact' | 'post-job' | 'login' | 'profile';
 }
 
 const Header: React.FC<Props> = ({ onNavigate, activePage }) => {
@@ -18,26 +18,31 @@ const Header: React.FC<Props> = ({ onNavigate, activePage }) => {
             <div className="bg-blue-600 text-white p-2 rounded-lg">
               <i className="fas fa-graduation-cap text-xl"></i>
             </div>
-            <span className="text-xl font-bold text-blue-900 tracking-tight uppercase">School <span className="text-blue-600">Job</span></span>
+            <span className="text-xl font-bold text-blue-900 tracking-tighter uppercase">School <span className="text-blue-600">Job</span></span>
           </button>
           
           <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
             <button 
               onClick={() => onNavigate('home')} 
-              className={`transition-colors ${activePage === 'home' ? 'text-blue-600 underline underline-offset-8' : 'hover:text-blue-600'}`}
+              className={`transition-colors ${activePage === 'home' ? 'text-blue-600 border-b-2 border-blue-600 pb-1' : 'hover:text-blue-600'}`}
             >
               Accueil
             </button>
-            <a href="#offres" className="hover:text-blue-600 transition-colors" onClick={() => activePage !== 'home' && onNavigate('home')}>Offres</a>
+            <button 
+              onClick={() => onNavigate('profile')} 
+              className={`transition-colors ${activePage === 'profile' ? 'text-blue-600 border-b-2 border-blue-600 pb-1' : 'hover:text-blue-600'}`}
+            >
+              Candidat
+            </button>
             <button 
               onClick={() => onNavigate('post-job')} 
-              className={`transition-colors font-bold ${activePage === 'post-job' ? 'text-blue-600' : 'text-blue-700 hover:text-blue-900'}`}
+              className={`transition-colors font-bold ${activePage === 'post-job' ? 'text-blue-600 border-b-2 border-blue-600 pb-1' : 'text-blue-700 hover:text-blue-900'}`}
             >
-              Publier une offre
+              Recruteur
             </button>
             <button 
               onClick={() => onNavigate('contact')} 
-              className={`transition-colors ${activePage === 'contact' ? 'text-blue-600' : 'hover:text-blue-600'}`}
+              className={`transition-colors ${activePage === 'contact' ? 'text-blue-600 border-b-2 border-blue-600 pb-1' : 'hover:text-blue-600'}`}
             >
               Contact
             </button>
@@ -51,7 +56,7 @@ const Header: React.FC<Props> = ({ onNavigate, activePage }) => {
               Connexion
             </button>
             <button 
-              onClick={() => onNavigate('login')}
+              onClick={() => onNavigate('profile')}
               className="bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-blue-700 transition-all shadow-md"
             >
               Inscription

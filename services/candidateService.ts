@@ -1,8 +1,8 @@
 
-import { User } from '../types';
+import { supabase } from '../lib/supabase';
 
 export interface CandidateProfile {
-  id: string;
+  id?: string;
   name: string;
   email: string;
   password?: string;
@@ -13,41 +13,65 @@ export interface CandidateProfile {
   degree: string;
   level: string;
   cvName: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
-const STORAGE_KEY = 'schooljob_candidates_db';
-
 export const candidateService = {
-  // Récupérer tous les candidats (Base de données)
-  getAll: (): CandidateProfile[] => {
-    const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+  // Récupérer tous les candidats depuis Supabase
+  getAll: async (): Promise<CandidateProfile[]> => {
+    const { data, error } = await supabase
+      .from('candidates')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching candidates:', error);
+      return [];
+    }
+    return data || [];
   },
 
-  // Sauvegarder un nouveau candidat
-  save: (profile: Omit<CandidateProfile, 'id' | 'createdAt'>): CandidateProfile => {
-    const candidates = candidateService.getAll();
-    const newCandidate: CandidateProfile = {
-      ...profile,
-      id: Math.random().toString(36).substr(2, 9),
-      createdAt: new Date().toISOString(),
-    };
-    candidates.push(newCandidate);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(candidates));
-    return newCandidate;
+  // Sauvegarder un nouveau candidat dans Supabase
+  save: async (profile: Omit<CandidateProfile, 'id' | 'createdAt'>): Promise<CandidateProfile | null> => {
+    const { data, error } = await supabase
+      .from('candidates')
+      .insert([profile])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error saving candidate:', error);
+      throw error;
+    }
+    return data;
   },
 
-  // Authentifier un candidat
-  authenticate: (email: string, password: string): CandidateProfile | null => {
-    const candidates = candidateService.getAll();
-    return candidates.find(c => c.email === email && c.password === password) || null;
+  // Authentifier un candidat via Supabase
+  authenticate: async (email: string, password: string): Promise<CandidateProfile | null> => {
+    const { data, error } = await supabase
+      .from('candidates')
+      .select('*')
+      .eq('email', email)
+      .eq('password', password)
+      .single();
+
+    if (error) {
+      console.error('Authentication error:', error);
+      return null;
+    }
+    return data;
   },
 
-  // Supprimer un profil (Gestion)
-  delete: (id: string): void => {
-    const candidates = candidateService.getAll();
-    const filtered = candidates.filter(c => c.id !== id);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+  // Supprimer un profil
+  delete: async (id: string): Promise<void> => {
+    const { error } = await supabase
+      .from('candidates')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting candidate:', error);
+      throw error;
+    }
   }
 };

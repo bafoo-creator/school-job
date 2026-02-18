@@ -6,8 +6,15 @@ const CandidateManagement: React.FC = () => {
   const [candidates, setCandidates] = useState<CandidateProfile[]>([]);
   const [filter, setFilter] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isConfigured, setIsConfigured] = useState(true);
 
   const fetchCandidates = async () => {
+    if (!candidateService.isConnected()) {
+      setIsConfigured(false);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     const data = await candidateService.getAll();
     setCandidates(data);
@@ -33,6 +40,25 @@ const CandidateManagement: React.FC = () => {
     c.name.toLowerCase().includes(filter.toLowerCase()) || 
     c.subject.toLowerCase().includes(filter.toLowerCase())
   );
+
+  if (!isConfigured) {
+    return (
+      <div className="py-20 bg-slate-50 min-h-screen flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white p-10 rounded-[2.5rem] shadow-2xl border border-orange-100 text-center">
+          <div className="w-20 h-20 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
+            <i className="fas fa-exclamation-triangle"></i>
+          </div>
+          <h2 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tighter">Configuration Requise</h2>
+          <p className="text-slate-600 mb-8 leading-relaxed">
+            La liaison avec <strong>Supabase</strong> n'est pas encore active. Veuillez configurer les variables d'environnement <code className="bg-slate-100 px-2 py-1 rounded text-blue-600 text-xs">SUPABASE_URL</code> et <code className="bg-slate-100 px-2 py-1 rounded text-blue-600 text-xs">SUPABASE_ANON_KEY</code> sur Netlify.
+          </p>
+          <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" className="inline-block bg-blue-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-blue-700 transition-all">
+            Créer un projet Supabase
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="py-12 bg-slate-50 min-h-screen">

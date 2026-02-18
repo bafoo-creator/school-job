@@ -17,8 +17,13 @@ export interface CandidateProfile {
 }
 
 export const candidateService = {
+  // Vérifie si la connexion est active
+  isConnected: () => !!supabase,
+
   // Récupérer tous les candidats depuis Supabase
   getAll: async (): Promise<CandidateProfile[]> => {
+    if (!supabase) return [];
+    
     const { data, error } = await supabase
       .from('candidates')
       .select('*')
@@ -33,6 +38,10 @@ export const candidateService = {
 
   // Sauvegarder un nouveau candidat dans Supabase
   save: async (profile: Omit<CandidateProfile, 'id' | 'createdAt'>): Promise<CandidateProfile | null> => {
+    if (!supabase) {
+      throw new Error("Connexion à la base de données indisponible.");
+    }
+
     const { data, error } = await supabase
       .from('candidates')
       .insert([profile])
@@ -48,12 +57,14 @@ export const candidateService = {
 
   // Authentifier un candidat via Supabase
   authenticate: async (email: string, password: string): Promise<CandidateProfile | null> => {
+    if (!supabase) return null;
+
     const { data, error } = await supabase
       .from('candidates')
       .select('*')
       .eq('email', email)
       .eq('password', password)
-      .single();
+      .maybeSingle(); // Utilisation de maybeSingle pour éviter l'erreur si non trouvé
 
     if (error) {
       console.error('Authentication error:', error);
@@ -64,6 +75,8 @@ export const candidateService = {
 
   // Supprimer un profil
   delete: async (id: string): Promise<void> => {
+    if (!supabase) throw new Error("Connexion indisponible.");
+
     const { error } = await supabase
       .from('candidates')
       .delete()

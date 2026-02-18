@@ -1,12 +1,21 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// Ces variables doivent être définies dans Netlify (Environment Variables)
-const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
+// Récupération des variables d'environnement injectées par Vite
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn("Supabase credentials missing. Database functionality will be limited.");
+/**
+ * On n'initialise le client que si les identifiants sont présents.
+ * Cela évite l'erreur "supabaseUrl is required" au chargement.
+ */
+export const supabase = (supabaseUrl && supabaseAnonKey && supabaseUrl !== '') 
+  ? createClient(supabaseUrl, supabaseAnonKey) 
+  : null;
+
+if (!supabase) {
+  console.warn(
+    "Identifiants Supabase manquants. " +
+    "Veuillez configurer SUPABASE_URL et SUPABASE_ANON_KEY dans vos variables d'environnement Netlify."
+  );
 }
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);

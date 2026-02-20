@@ -19,7 +19,7 @@ export const generateJobDescription = async (title: string, school: string, requ
       Le ton doit être formel, encourageant et mettre en valeur l'excellence éducative. 
       Format: Markdown.`,
     });
-    return response.text;
+    return response.text || "Erreur lors de la génération de l'annonce.";
   } catch (error) {
     console.error("Gemini Error:", error);
     return "Erreur lors de la génération de l'annonce.";
@@ -40,7 +40,7 @@ export const suggestFormFields = async (jobTitle: string) => {
         responseMimeType: "application/json"
       }
     });
-    return JSON.parse(response.text);
+    return JSON.parse(response.text || "[]");
   } catch (error) {
     console.error("Gemini Error:", error);
     return [];

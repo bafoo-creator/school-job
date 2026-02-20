@@ -21,7 +21,6 @@ const Header: React.FC<Props> = ({ onNavigate, activePage, userName, onLogout })
           <nav className="hidden md:flex items-center space-x-8 text-[11px] font-black uppercase tracking-widest text-slate-500">
             <button onClick={() => onNavigate('home')} className={`hover:text-blue-600 ${activePage === 'home' ? 'text-blue-600' : ''}`}>Accueil</button>
             <button onClick={() => onNavigate('profile')} className={`hover:text-blue-600 ${activePage === 'profile' ? 'text-blue-600' : ''}`}>Espace Candidat</button>
-            <button onClick={() => onNavigate('admin-candidates')} className={`hover:text-blue-600 ${activePage === 'admin-candidates' ? 'text-blue-600' : ''}`}>Base de données</button>
             <button onClick={() => onNavigate('contact')} className={`hover:text-blue-600 ${activePage === 'contact' ? 'text-blue-600' : ''}`}>Contact</button>
           </nav>
 
